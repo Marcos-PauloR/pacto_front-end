@@ -13,4 +13,5 @@ export class LandingPageComponent {
     this.routes.navigate(['/register']);
   }
 
+  
 }

@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { StorageService } from '../services/storage.service';
+import { HotToastService } from '@ngneat/hot-toast';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'login',
@@ -12,17 +14,15 @@ export class LoginComponent {
     email: null,
     password: null
   }
-  isLoggedIn = false;
   isLoginFailed = false;
   errorMessage = "";
-  roles: string[] = [];
+  routes = inject(Router)
   
-  constructor(private authService: AuthService, private storageService: StorageService){} 
+  constructor(private authService: AuthService, private storageService: StorageService, private toast:HotToastService){} 
 
   ngOnInit():void{
     if(this.storageService.isLoggedIn()){
-      this.isLoggedIn = true;
-      this.roles = this.storageService.getToken().roles;
+      this.authService.isLogged.emit(true);
     }
   }
 
@@ -31,14 +31,13 @@ export class LoginComponent {
     this.authService.login(email, password).subscribe(
       data => {
         this.storageService.saveToken(data);
-        this.isLoginFailed = false;
-        this.isLoggedIn = true;
-        this.roles = this.storageService.getToken().roles;
-        this.reloadPage();
+        this.toast.success('Login efetuado com sucesso',{duration:3000});
+        this.authService.isLogged.emit(true);
+        this.routes.navigate(['/home']);
       },
       err => {
-        console.log(err)
-        this.errorMessage = err.error.message;
+          this.authService.isLogged.emit(false);
+        this.errorMessage = 'Email ou senha inválidos';
         this.isLoginFailed = true;
       }
     );

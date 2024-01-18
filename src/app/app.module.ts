@@ -11,7 +11,7 @@ import { HomeComponent } from './home/home.component';
 import { ProfileComponent } from './profile/profile.component';
 import { interceptToken } from './helpers/token.interceptor';
 import { LandingPageComponent } from './landing-page/landing-page.component';
-
+import { HotToastModule } from '@ngneat/hot-toast';
 
 @NgModule({
   declarations: [
@@ -20,13 +20,20 @@ import { LandingPageComponent } from './landing-page/landing-page.component';
     RegisterComponent,
     HomeComponent,
     ProfileComponent,
-    LandingPageComponent
+    LandingPageComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,    
+    HotToastModule.forRoot({
+      reverseOrder: true,
+      dismissible: true,
+      autoClose: true,
+      position:'top-right',
+      theme:'snackbar'
+    })
   ],
   providers: [provideHttpClient(withInterceptors([interceptToken]))],
   bootstrap: [AppComponent]

@@ -10,9 +10,8 @@ import { Router } from '@angular/router';
 })
 export class AppComponent {
   private roles: string[] = [];
-  isLoggedIn = false;
-  // showAdminBoard = false;
-  //
+
+  isLoggedIn: boolean = false;
   userName?: string;
   router = inject(Router);
 
@@ -20,31 +19,26 @@ export class AppComponent {
     private storageService: StorageService,
     private authService: AuthService
   ) {}
-
+  
+  
+  
   ngOnInit(): void {
-    console.log(this.isLoggedIn)
-    this.isLoggedIn = this.storageService.isLoggedIn();
-    if (this.isLoggedIn) {
-      const user = this.storageService.getToken();
-      this.roles = user.roles;
-      this.userName = user.nome;
+    this.authService.isLogged.subscribe((value) => {
+      this.isLoggedIn = value
+    })
+    if (this.storageService.isLoggedIn()) {
+      this.isLoggedIn =this.storageService.isLoggedIn(); 
+      this.roles = this.storageService.getRole();
+      this.userName = this.storageService.getUser();
     }
   }
 
-  // ngOnChanges(): void {
-  //   console.log(this.isLoggedIn)
-  //   this.isLoggedIn = this.storageService.isLoggedIn();
-  //   if (this.isLoggedIn) {
-  //     const user = this.storageService.getToken();
-  //     this.roles = user.roles;
-  //     this.userName = user.nome;
-  //   }
-  // }
   
   logout(): void {
     this.isLoggedIn = false;
     this.storageService.clean();
     window.location.reload();
+    this.authService.isLogged.emit(false);
     this.router.navigate(['/']);
   }
 }

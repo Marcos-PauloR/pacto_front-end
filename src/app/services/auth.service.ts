@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 const AUTH_API = 'http://localhost:9006/api/pacto/auth'
@@ -17,16 +17,16 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
+  isLogged = new EventEmitter<boolean>();
+
   login(email: string, password: string):Observable<any> {
     return this.http.post(AUTH_API + '/login' , {
       email,
       password
     }, httpsOptions);
-    
   }
 
   register(nome:string, email: string, password: string, role:string): Observable<any> {
-    console.log(AUTH_API + '/register')
     return this.http.post(AUTH_API + '/register', {
       email,
       password,

@@ -1,19 +1,16 @@
 <div id="app" class="app">
   <nav class="navbar navbar-expand navbar-dark bg-dark">
-    <a href="#" class="navbar-brand">Portal Vagas</a>
+    <a href="home" class="navbar-brand">Portal Vagas</a>
     <ul class="navbar-nav mr-auto" routerLinkActive="active">
+      @if (isLoggedIn) {
       <li class="nav-item">
         <a href="/home" class="nav-link" routerLink="home">Home</a>
       </li>
-      @if (isLoggedIn) {
-      <li class="nav-item">
-        <a href="/user" class="nav-link" routerLink="user">User</a>
-      </li>
-      }
+    }
     </ul>
 
     @if (!isLoggedIn) {
-    <ul  class="navbar-nav ml-auto">
+    <ul class="navbar-nav ml-auto">
       <li class="nav-item">
         <a href="/register" class="nav-link" routerLink="register">Sign Up</a>
       </li>

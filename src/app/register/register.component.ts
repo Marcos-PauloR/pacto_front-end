@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { AuthService } from '../services/auth.service';
+import { HotToastService } from '@ngneat/hot-toast';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register',
@@ -7,33 +9,39 @@ import { AuthService } from '../services/auth.service';
   styleUrl: './register.component.css'
 })
 export class RegisterComponent {
+  router = inject(Router);
   form:any = {
     nome: null,
     email: null,
     password: null,
-    role:"ADMIN"
+    role:'USER'
   }
   isSuccessful = false;
   isSignUpFailed = false;
   errorMessage = '';
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private toast: HotToastService) { }
 
 
   onSubmit(): void {
-    console.log(this.form)
-    const { nome, email, password, role="ADMIN" } = this.form;
+    const { nome, email, password, role } = this.form;
     this.authService.register(nome, email, password, role).subscribe(
       data => {
-        console.log(data);
+        this.toast.success('Usário cadastrado com sucesso!',{duration:3000,position:'top-center'});
         this.isSuccessful = true;
         this.isSignUpFailed = false;
       },
       err => {
+        err.error.errors.map((e:any)=>{
+          if(e.message!=='' && e.message!==undefined){
+            this.toast.error(e.message,{duration:3000});
+          }
+        })
+        
         this.errorMessage = err.error.message;
         this.isSignUpFailed = true;
       }
-    );
+      );
   }
 
 }

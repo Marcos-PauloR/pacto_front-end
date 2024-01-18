@@ -1,25 +1,21 @@
-<div class="col-md-12">
-    <div class="card card-container">
-        
-        <!-- <img id="profile-img" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" class="profile-img-card" /> -->
-        
-        @if (!isSuccessful) {
+<div class=" mx-auto  w-50 ">
+    <div class="card card-container register rounded-16 jumbotron">
+
+        <h2 class="mx-auto">Cadastre-se</h2>
+
+
         <form name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate>
             <div class="form-group">
                 <label for="nome">nome</label>
-                <input type="text" class="form-control" name="nome" [(ngModel)]="form.nome" required
-                    minlength="3" maxlength="20" #nome="ngModel"
-                    [ngClass]="{ 'is-invalid': f.submitted && nome.errors }" />
+                <input type="text" class="form-control" name="nome" [(ngModel)]="form.nome" required minlength="3"
+                    #nome="ngModel" [ngClass]="{ 'is-invalid': f.submitted && nome.errors }" />
                 @if (nome.errors && f.submitted) {
                 <div class="invalid-feedback">
                     @if (nome.errors['required']) {
-                    <div>nome is required</div>
+                    <div>nome é obrigatório</div>
                     }
                     @if (nome.errors['minlength']) {
-                    <div>nome must be at least 3 characters</div>
-                    }
-                    @if (nome.errors['maxlength']) {
-                    <div>nome must be at most 20 characters</div>
+                    <div>nome deve ter pelo menos 3 caracteres</div>
                     }
                 </div>
                 }
@@ -54,8 +50,22 @@
                 </div>
                 }
             </div>
+
+            <div class="form-group ">
+                <div class="group-user">
+
+                    <label>Selecione o tipo de usuário:</label>
+                    <label>
+                        <input type="radio" name="tipoUsuario" value="USER" [(ngModel)]="form.role"> Candidato
+                    </label>
+                    <label>
+                        <input type="radio" name="tipoUsuario" value="ADMIN" [(ngModel)]="form.role"> Empresa
+                    </label>
+                </div>
+            </div>
+
             <div class="form-group">
-                <button class="btn btn-primary btn-block">Sign Up</button>
+                <button class="btn btn-primary btn-block w-50 mx-auto">Sign Up</button>
             </div>
 
             @if (f.submitted && isSignUpFailed) {
@@ -64,8 +74,5 @@
             </div>
             }
         </form>
-        } @else {
-        <div class="alert alert-success">Your registration is successful!</div>
-        }
     </div>
 </div>

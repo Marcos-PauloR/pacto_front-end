@@ -10,8 +10,8 @@ const storageService: StorageService = new StorageService();
 export const interceptToken: HttpInterceptorFn = (req, next) => {
     let router = inject(Router);
     const token = storageService.getToken();
-    if (Object.keys(token).length!==0) {
-        let decodeToken = jwtDecode(token.token);
+    if (typeof(token)==='string' && Object.keys(token).length !== 0) {
+        let decodeToken = jwtDecode(token);
         const isExpired =
             decodeToken && decodeToken.exp
                 ? decodeToken.exp < Date.now() / 1000
@@ -19,19 +19,15 @@ export const interceptToken: HttpInterceptorFn = (req, next) => {
         if (isExpired) {
             // TODO Implementar refresh token
             storageService.clean();
-            router.navigate(['/login']);
         } else {
-            // req = req.clone({
-            //   setHeaders: {
-            //     Authorization: `Bearer ${token}`,
-            //   },
-            // });
+            req = req.clone({
+                setHeaders: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             router.navigate(['/home']);
-            
         }
-    } else {
-        console.log('no token');
-        router.navigate(['/login']);
+    }else{
     }
 
     return next(req);
